@@ -1,0 +1,20 @@
+pipelines:
+  branches:
+    master:
+      - step:
+          image: atlassian/pipelines-awscli
+          name: Build and upload docker image
+          deployment: production
+          caches:
+            - docker
+          script:
+            - IMAGE="996319746099.dkr.ecr.eu-central-1.amazonaws.com/micro-bastion"
+            - TAG=latest
+            - aws configure set aws_access_key_id "${AWS_KEY}"
+            - aws configure set aws_secret_access_key "${AWS_SECRET}"
+            - eval $(aws ecr get-login --no-include-email --region eu-central-1 | sed 's;https://;;g')
+            - docker build -t $IMAGE:$TAG .
+            - docker push $IMAGE:$TAG
+            - aws ecs update-service --cluster infrastructure --service micro-bastion --region eu-central-1 --force-new-deployment
+          services:
+            - docker
