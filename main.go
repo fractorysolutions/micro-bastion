@@ -10,23 +10,25 @@ import "strings"
 
 func handleRequest(w http.ResponseWriter, r *http.Request) {
 	r.URL = calculateURL(r)
-	r.Host = r.URL.Host;
-	resp, err := http.DefaultTransport.RoundTrip(r);
+	r.Host = r.URL.Host
+	log.Println("Requesting ", r.URL)
+	resp, err := http.DefaultTransport.RoundTrip(r)
 
-	if err  != nil {
-		http.Error(w, err.Error(), http.StatusServiceUnavailable);
-		return;
+	if err != nil {
+		log.Println("Could not fetch ", r.URL, ": ", err)
+		http.Error(w, err.Error(), http.StatusServiceUnavailable)
+		return
 	}
 
 	defer resp.Body.Close()
 
 	copyHeader(resp.Header, w)
-	w.WriteHeader(resp.StatusCode);
+	w.WriteHeader(resp.StatusCode)
 	io.Copy(w, resp.Body)
 }
 
 func copyHeader(from http.Header, to http.ResponseWriter) {
-	toHeader := to.Header();
+	toHeader := to.Header()
 	for k, vs := range from {
 		for _, v := range vs {
 			toHeader.Add(k, v)
@@ -34,7 +36,7 @@ func copyHeader(from http.Header, to http.ResponseWriter) {
 	}
 }
 
-func calculateURL(r *http.Request) (*url.URL) {
+func calculateURL(r *http.Request) *url.URL {
 	newURL := *r.URL
 	oldPath := r.URL.Path
 	oldPathParts := strings.Split(oldPath, "/")[1:]
