@@ -11,7 +11,7 @@ import "strings"
 func handleRequest(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
 		fmt.Fprintln(w, "Bastion is up")
-		return;
+		return
 	}
 	r.URL = calculateURL(r)
 	r.Host = r.URL.Host
