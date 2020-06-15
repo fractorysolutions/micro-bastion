@@ -54,8 +54,12 @@ func main() {
 	log.Println("Starting micro-bastion on port ", port)
 
 	server := &http.Server{
-		Addr:    fmt.Sprint(":", port),
-		Handler: http.HandlerFunc(handleRequest),
+		Addr:              fmt.Sprint(":", port),
+		Handler:           http.HandlerFunc(handleRequest),
+		ReadTimeout:       0,
+		ReadHeaderTimeout: 0,
+		WriteTimeout:      0,
+		IdleTimeout:       0,
 	}
 
 	// start the server
