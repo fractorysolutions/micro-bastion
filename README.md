@@ -38,6 +38,16 @@ http://localhost:8888/xn--kdaa.eu/80/vant4.png
 
 (it will also serve back any redirects as-is, so if opened in a browser, the second example will have you redirected to the actual website with https)
 
+
+If put into e.g. AWS ECS, it can resolve service discovery domains, like
+```
+http://localhost:8888/myservice.local/3000/myendpoint
+```
+
+## Security
+
+Running this opened to the internet would make essentially an open proxy. It is strongly recommended to limit access to it by firewall. Micro-bastion does not currently support any access control methods on its own.
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
