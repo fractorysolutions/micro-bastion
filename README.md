@@ -4,7 +4,7 @@ Micro-bastion is a minimal HTTP forwarding service originally built for accessin
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+Can be built with standard Go installation:
 
 ```bash
 go build
