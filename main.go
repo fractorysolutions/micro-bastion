@@ -53,12 +53,13 @@ func calculateURL(r *http.Request) *url.URL {
 }
 
 func main() {
-	var port = *flag.Int("port", 8888, "port that micro-bastion should listen on")
+	var port = flag.Int("port", 8888, "port that micro-bastion should listen on")
+	flag.Parse()
 
-	log.Println("Starting micro-bastion on port ", port)
+	log.Println("Starting micro-bastion on port", *port)
 
 	server := &http.Server{
-		Addr:              fmt.Sprint(":", port),
+		Addr:              fmt.Sprint(":", *port),
 		Handler:           http.HandlerFunc(handleRequest),
 		ReadTimeout:       0,
 		ReadHeaderTimeout: 0,
