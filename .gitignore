@@ -30,4 +30,8 @@
 /vendor/
 /Godeps/
 
+
 # End of https://www.toptal.com/developers/gitignore/api/go,code
+
+# The binary on linux
+micro-bastion
