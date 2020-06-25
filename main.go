@@ -1,19 +1,25 @@
 package main
 
-import "fmt"
-import "net/http"
-import "net/url"
-import "flag"
-import "log"
-import "io"
-import "strings"
+import (
+	"flag"
+	"fmt"
+	"io"
+	"log"
+	"net/http"
+	"net/url"
+	"strings"
+)
 
 func handleRequest(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
-		fmt.Fprintln(w, "Bastion is up")
+		fmt.Fprintln(w, "Bastion is up ")
 		return
 	}
 	r.URL = calculateURL(r)
+	if r.URL.Host == "" {
+		log.Println("Requesting nothing")
+		return
+	}
 	r.Host = r.URL.Host
 	log.Println("Requesting ", r.URL)
 	resp, err := http.DefaultTransport.RoundTrip(r)
@@ -44,6 +50,14 @@ func calculateURL(r *http.Request) *url.URL {
 	newURL := *r.URL
 	oldPath := r.URL.Path
 	oldPathParts := strings.Split(oldPath, "/")[1:]
+	log.Println("This is oldPath:", oldPath, strings.Split(oldPath, "/"), oldPathParts, len(oldPathParts))
+	if len(oldPathParts) <= 1 {
+		log.Println("The URL is too short ")
+		newURL.Host = ""
+		newURL.Path = ""
+		newURL.Scheme = ""
+		return &newURL
+	}
 	newURL.Host = oldPathParts[0] + ":" + oldPathParts[1]
 	newURL.Path = "/" + strings.Join(oldPathParts[2:], "/")
 
